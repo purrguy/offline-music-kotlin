@@ -90,8 +90,8 @@ object TrimAudio {
 
         val bytesPerFrame = channels * 2
         val totalFrames = pcmBytes.size / bytesPerFrame
-        val s = ((startMs.coerceAtLeast(0) * sampleRate) / 1000).coerceIn(0, totalFrames).toInt()
-        val e = ((endMs.coerceAtLeast(s + 1) * sampleRate) / 1000).coerceIn(s + 1, totalFrames).toInt()
+        val s = ((startMs.coerceAtLeast(0) * sampleRate) / 1000).coerceIn(0L, totalFrames.toLong()).toInt()
+        val e = ((endMs.coerceAtLeast((s + 1).toLong()) * sampleRate) / 1000).coerceIn((s + 1).toLong(), totalFrames.toLong()).toInt()
         val sliced = pcmBytes.copyOfRange(s * bytesPerFrame, e * bytesPerFrame)
         out.writeBytes(wavBytes(sliced, channels, sampleRate))
     }
