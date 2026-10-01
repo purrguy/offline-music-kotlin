@@ -17,14 +17,15 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - uses: android-actions/setup-android@v3
-        with:
-          packages: platform-tools "platforms;android-34" "build-tools;34.0.0"
+      - name: Ensure SDK packages (runner has SDK preinstalled)
+        run: |
+          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT"
+          yes | sdkmanager --licenses > /dev/null || true
+          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
       - name: Show versions
         run: |
           java -version
           gradle --version || true
-          sdkmanager --list_installed || true
       - name: Build debug APK (system gradle, no wrapper needed)
         run: gradle :app:assembleDebug --no-daemon --stacktrace
       - uses: actions/upload-artifact@v4
