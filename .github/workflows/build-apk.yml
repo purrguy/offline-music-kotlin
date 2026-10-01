@@ -23,15 +23,12 @@ jobs:
           echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT"
           yes | sdkmanager --licenses > /dev/null || true
           sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
-      - name: Set up Gradle
+      - name: Set up Gradle 8.10.2 (matches AGP 8.5 + Kotlin 1.9)
         run: |
-          if command -v gradle >/dev/null 2>&1; then
-            gradle --version
-          else
-            curl -sL https://services.gradle.org/distributions/gradle-8.9-bin.zip -o /tmp/gradle.zip
-            unzip -q /tmp/gradle.zip -d /tmp
-            echo "/tmp/gradle-8.9/bin" >> "$GITHUB_PATH"
-          fi
+          curl -sL https://services.gradle.org/distributions/gradle-8.10.2-bin.zip -o /tmp/gradle.zip
+          unzip -q /tmp/gradle.zip -d /tmp
+          echo "/tmp/gradle-8.10.2/bin" >> "$GITHUB_PATH"
+          /tmp/gradle-8.10.2/bin/gradle --version
       - name: Build debug APK (system gradle, no wrapper needed)
         run: gradle :app:assembleDebug --no-daemon --stacktrace
       - uses: actions/upload-artifact@v4
